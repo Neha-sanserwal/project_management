@@ -12,7 +12,8 @@
 
       if(isset($_POST["submit"]))
       {  $project = $_POST["project_name"];
-         $skill = $_POST["skills"];
+         
+        $skill = implode(', ', $_POST['skills']);
          $discription = $_POST["discription"];
          $file = rand()*10;
          $file_name = $_FILES['txtfile']['name'];
@@ -53,12 +54,25 @@
                                     <table style="margin-left:150px; color:white;">
                                         <tr >
                                             <td  >Project Name:</td>
-                                              <td><input id="project_name" type="text" placeholder="My Project" name="project_name">
+                                              <td><input id="project_name" type="text" placeholder="My Project" name="project_name" required onkeyup="projectname_validation('project_name', 'project_error', 'project_val')">
+                                                   <div style="color:red;font-size:12px;"id="project_error"> </div>
+                                                     <div style="color:red;font-size:12px;"id="project_val"> </div>
                                               </td>
                                         </tr>
                                          <tr>
                                              <td>Skill Required:</td>
-                                             <td><input type="text" id="skills" placeholder="html, php, sql" name="skills">
+                                             <td>
+                                                 <select name="skills[]" required multiple>
+                                                          <option value="C++">C++</option>
+                                                          <option value="Java">Java</option>
+                                                          <option value="PHP">PHP</option>
+                                                          <option value="HTML">HTML</option>
+                                                          <option value="Javascript">Javascript</option>
+                                                          <option value="JQuery">JQuery</option>
+                                                          <option value="Python">Python</option>
+                                                          <option value="Ruby">Ruby</option>
+                                                         
+                                                 </select>
                                              </td>
                                         </tr>
 
@@ -67,22 +81,64 @@
                                            <td>Discription:</td>
                                             <td>
    
-                                            <textarea maxlength="150000" style="width:500px; height:209px;" name="discription" ></textarea></td>
+                                            <textarea maxlength="150000" style="width:500px; height:209px;" name="discription"required ></textarea></td>
                                         
                                         </tr>
                                           <tr>
                                              <td>Drop A Folder Here:</td>
-                                             <td><input type="file" id="file" placeholder="my file" value="put here" name="txtfile">
+                                             <td><input type="file" id="file" placeholder="my file" value="put here" name="txtfile" required>
                                              </td>
                                         </tr>
 
 
                                             </table><br/><br/>
-                                        <input  class="btn btn-success" style="margin-left:100px;" type="submit" value="submit " name="submit"><br/><br/>
+                                        <input  class="btn btn-success" id="submit" style="margin-left:100px;" type="submit" value="submit " name="submit"><br/><br/>
 
                                      </form >
                                  </div>
             </div>
-            
+            <script>
+                  function space_check(id, error_id)
+                 {
+                      var val =document.getElementById(id).value ;
+                    
+                      if (val.trim() == "")
+                          {  
+                              document.getElementById(error_id).innerHTML="space is not allowed!";
+                              document.getElementById(id).value = val.trim();
+                        
+                              disable_on();
+                          }
+                     else
+                        { document.getElementById(error_id).innerHTML="";
+                          disable_off();
+                        }
+                 }
+               function projectname_validation(id, error_id,error_val)
+                {   
+                    var val =document.getElementById(id).value;
+                    space_check(id, error_id);
+                    var reg = /^[a-zA-Z0-9\s]+$/;
+                    if(!reg.test(val))
+                        {
+                            document.getElementById(error_val).innerHTML="only alphanumeric characters are allowed! ";
+                            disable_on();
+                        }
+                    else
+                        {
+                            document.getElementById(error_val).innerHTML="";
+                            disable_off();
+                        }
+                    
+                }
+                function disable_on()
+                     {
+                          document.getElementById('submit').setAttribute("disabled", true);
+                     }
+            function disable_off()
+                     {
+                          document.getElementById('submit').removeAttribute("disabled");
+                     }
+            </script>         
         </body>
     </html>

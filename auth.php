@@ -27,7 +27,7 @@
 ?>
 <html>
     
-	<body style="background-image: radial-gradient(royalblue,blue,lightblue,white);" >
+	<body>
 		<div class="container">
 			<div class="panel panel-primary" style="float:left; margin-left:10%">
                <?php if(isset($_SESSION["error"])){ echo ( '<div align="center" style="color:red">'. $_SESSION["error"] .'</div>'); }?>

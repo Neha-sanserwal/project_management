@@ -22,11 +22,11 @@
 <html>
     <body>
         <div class="container">
-        <form method="POST" >
-        <table style="align-self:center">
-            <tr >
+        <form method="POST">
+        <table id="update_pass">
+            <tr>
                 <td>PASSWORD:</td>
-                <td><input type="password" id="pass" placeholder="mypassword" name="password"></td>
+                <td><input type="password" id="pass" placeholder="mypassword" name="password"></td><br/><br/>
             </tr>
             <tr>
                  <td>CHANGE PASSWORD:</td>
@@ -36,7 +36,7 @@
             
 
         </table><br/>
-                             <input style="margin-left:50%;"class='btn-btn-primary' type="submit" name="submit" value="submit">
+                             <input style="margin-left:50%;"class="btn btn-primary btn-lg" type="submit" name="submit" value="submit">
         </form>
         </div>
     </body>

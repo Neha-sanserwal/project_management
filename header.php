@@ -17,10 +17,10 @@
                            session_start();
                           if(!isset($_SESSION['user']))
                           {  echo('<li ><a href="auth.php"> log in</a></li> ');
-                            echo( '<li><a href="login_details.php"> SIGN UP</a></li>');
+                            echo( '<li><a href="login_details.php"> Sign Up</a></li>');
                           }
                          else 
-                         { echo( "<li ><a href='logout.php' id='logout' > log out</a></li> ");
+                         { echo( "<li ><a href='logout.php' id='logout' > Log Out</a></li> ");
                               echo( '<li ><a href="project.php"> My Projects</a></li> '); 
                                echo( '<li ><a href="update_pass.php"> Change Password </a></li> ');
                          }
