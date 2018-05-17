@@ -1,11 +1,13 @@
 <?php 
  include("base.php");
  include("header.php");
-    
+   $error = "";  
+             	//$_SESSION['message'] = "" ;
      if(isset($_POST["submit"]))
        {
 	      $username = $_POST["username"];
 	      $password = $_POST["password"];
+         
           $authen = mysqli_query($con,"select user_id from login_details where user_name='$username'and pwd ='$password' ");
               while ($row = $authen->fetch_assoc()) {
                   $_SESSION['user_id']= $row['user_id'];
@@ -17,21 +19,31 @@
            {
             
              $_SESSION['user']=$username;
-        
-             
-          
+           
              header('Location:profile.php');
             }
-         
+         if($row != 1)
+              $error = "Please check if you have entered your password and email correctly!";
      }
 ?>
 <html>
     
 	<body>
+         
+                
+               <?php if(isset($_SESSION['message'])){ echo ('<h5 style="background:green; text-align:center; color: white;">' .$_SESSION["message"]. '</h5>'); }
+        
+               
+            // echo ('<h5 style="background:green; text-align:center; color: white;">' .$_SESSION['message']. '</h5>'); }
+         ?>
 		<div class="container">
+           
 			<div class="panel panel-primary" style="float:left; margin-left:10%">
                <?php if(isset($_SESSION["error"])){ echo ( '<div align="center" style="color:red">'. $_SESSION["error"] .'</div>'); }?>
+                <?php  echo ( '<div align="center" style="color:red">'. $error .'</div>'); ?>
+				
 				<div class="panel-heading">
+                    
 					<h3>LOGIN YOURSELF!</h3>
 				</div>
 				<div class="panel-body">

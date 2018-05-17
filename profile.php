@@ -12,22 +12,26 @@
     }
     $user_id=$_SESSION['user_id'];
 
-    echo "<br/><br/><h1 style='text-align:center;'> Hello, ".$_SESSION['user']."</h1>" ;
 
     $list = mysqli_query ($con , "select file from project_details where user_id ='$user_id'");
 
+        echo "<br/><br/><h1  style='text-align:center; background:linear-gradient(to bottom, purple,blue );'> Hello, ".$_SESSION['user']."</h1>" ;
+   echo("<div class='jumbotron'>");
+     echo("<h4 style ='color : purple ; text-align:center;' > Here are Your list of projects</h3>");
     while($name = $list->fetch_assoc())
     {   
         $link =$name['file'];
-        echo(" <a href= 'uploads/'.$link>".$name['file']."</a><br>");
-     }
+        $user = $_SESSION['user'];
+        
+        echo(" <h4 style='text-align:center;'><a href='$user/$link' download>".$name['file']."</a></h4>");
+     
+     }   echo("</div>");
 ?>
 
 <html>
     
 	<body>
-        
-        <a href="project.php">  <input class="btn btn-primary btn-lg" style="margin-left:45%; margin-top:20%; border-radius:40px;" type="submit" value="create project" name="submit"><br/><br/></a>
+        <a href="project.php">  <input class="btn btn-primary btn-lg" style="margin-left:45%; margin-top:10%; border-radius:40px;" type="submit" value="Post project" name="submit"><br/><br/></a>
         
 	</body>
 </html>

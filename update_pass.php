@@ -30,7 +30,9 @@
             </tr>
             <tr>
                  <td>CHANGE PASSWORD:</td>
-                <td><input type="password"  placeholder="mypassword" name="changed_pass"></td>
+                <td><input type="password" id="pass" placeholder="mypassword" name="changed_pass" onkeyup="password_validation('pass','passerror','passval')"></td>
+                             <div style="color:red; font-size:13px;"id="passerror"> </div>
+                                                <div style="color:red; font-size:13px;"id="passval"></div>
                 
             </tr>
             
@@ -39,5 +41,48 @@
                              <input style="margin-left:50%;"class="btn btn-primary btn-lg" type="submit" name="submit" value="submit">
         </form>
         </div>
+        <script>
+               function pass_validation(id, error_id, error_len, error_val)
+                {   var val =document.getElementById(id).value ;
+                    space_check(id,  error_id);
+                    length_check(val, error_len);
+                    var reg=/^(?=.*\d)[a-zA-Z\d_@./#&+-]{8,13}$/; 
+                    if(!reg.test(val))
+                        {
+                            document.getElementById(error_val).innerHTML = "password must consist of alphanumeric character! ";
+                            disable_on();
+                        }
+                   else
+                       {
+                            document.getElementById(error_val).innerHTML = "";
+                            disable_off();
+                       }
+                }
+              
+            function space_check(id, error_id)
+                 {
+                      var val =document.getElementById(id).value ;
+                    
+                      if (val.trim() == "")
+                          {  
+                              document.getElementById(error_id).innerHTML="space is not allowed!";
+                              document.getElementById(id).value = val.trim();
+                        
+                              disable_on();
+                          }
+                     else
+                        { document.getElementById(error_id).innerHTML="";
+                          disable_off();
+                        }
+                 }
+                function disable_on()
+                     {
+                          document.getElementById('submit').setAttribute("disabled", true);
+                     }
+            function disable_off()
+                     {
+                          document.getElementById('submit').removeAttribute("disabled");
+                     }
+        </script>
     </body>
 </html>

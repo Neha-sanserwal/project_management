@@ -9,7 +9,7 @@
     {   $user = $_SESSION['user'];
         unset($_SESSION['error']);
     }
-
+         
       if(isset($_POST["submit"]))
       {  $project = $_POST["project_name"];
          
@@ -20,7 +20,11 @@
          $file_size = $_FILES['txtfile']['size'];
          $file_type = $_FILES['txtfile']['type'];
          $user_id=$_SESSION['user_id'];
-         move_uploaded_file($_FILES['txtfile']['tmp_name'],'uploads/'.$user_id.$file_name);
+         $path = $user;
+          if ( ! is_dir($path)) {
+                    mkdir($path);
+           }
+         move_uploaded_file($_FILES['txtfile']['tmp_name'], $path.'/'.$file_name);
          $sql = mysqli_query($con, "insert into project_details (project_name, discription, skills, file,user_id) values ('$project', '$discription', '$skill','$file_name','$user_id')");
          
         header('location:profile.php');
@@ -54,7 +58,7 @@
                                     <table style="margin-left:150px; color:white;">
                                         <tr >
                                             <td  >Project Name:</td>
-                                              <td><input id="project_name" type="text" placeholder="My Project" name="project_name" required onkeyup="projectname_validation('project_name', 'project_error', 'project_val')">
+                                              <td><input id="project_name" type="text" placeholder="My Project" name="project_name" required onkeyup="project_validation('project_name', 'project_error', 'project_val')">
                                                    <div style="color:red;font-size:12px;"id="project_error"> </div>
                                                      <div style="color:red;font-size:12px;"id="project_val"> </div>
                                               </td>
@@ -81,7 +85,9 @@
                                            <td>Discription:</td>
                                             <td>
    
-                                            <textarea maxlength="150000" style="width:500px; height:209px;" name="discription"required ></textarea></td>
+                                            <textarea maxlength="150000" style="width:500px; height:209px;"  id="text" name="discription"required onkeyup="project_validation('text', 'text_error', 'text_val')"></textarea>
+                                              <div style="color:red;font-size:12px;"id="text_error"> </div>
+                                                     <div style="color:red;font-size:12px;"id="text_val"> </div></td>
                                         
                                         </tr>
                                           <tr>
@@ -114,7 +120,7 @@
                           disable_off();
                         }
                  }
-               function projectname_validation(id, error_id,error_val)
+               function project_validation(id, error_id,error_val)
                 {   
                     var val =document.getElementById(id).value;
                     space_check(id, error_id);

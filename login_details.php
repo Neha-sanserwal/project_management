@@ -2,10 +2,10 @@
     <?php include("base.php"); 
           include("header.php");
 
-
-
+             
             if(isset($_POST["submit"]))
               {
+			
                 $username=$_POST["username"];
 
 
@@ -19,21 +19,26 @@
 
                 $email_id = $_POST["email_id"];
 
-
+     
 
 
                 $ins = mysqli_query( $con,"insert into LOGIN_DETAILS ( user_name, pwd, first_name, last_name, user_mail ) values ( '$username', '$password', '$firstname', '$lastname', '$email_id' ) " );
 
 
                 if($ins)
+                   {    $_SESSION['message'] = "Congratulation! you are registered. Please login now .";
                      header('Location:auth.php');
+                     
+                   }
                 else
-                    echo("error");
+                {    echo("error");
+                     
+                     unset($_SESSION['message']);
 
             }
 
 
-
+            }
 
         ?>
     <html>
