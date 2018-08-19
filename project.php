@@ -1,8 +1,11 @@
-<?php include("base.php");
-      include("header.php");
+<?php
+         session_start();
+      include("base.php");
+  
      
-      if(!isset($_SESSION['user'])){
-        header("location:auth.php");
+      if(!isset($_SESSION['user_id'])){
+        // header("location:auth.php");
+         header('location:index.php');
         $_SESSION['error']="Please Login";
       }
        else
@@ -20,53 +23,42 @@
          $file_size = $_FILES['txtfile']['size'];
          $file_type = $_FILES['txtfile']['type'];
          $user_id=$_SESSION['user_id'];
-         $path = $user;
+         $path = $_SESSION['user_id'];
           if ( ! is_dir($path)) {
                     mkdir($path);
            }
          move_uploaded_file($_FILES['txtfile']['tmp_name'], $path.'/'.$file_name);
-         $sql = mysqli_query($con, "insert into project_details (project_name, discription, skills, file,user_id) values ('$project', '$discription', '$skill','$file_name','$user_id')");
+	   
+         $sql = mysqli_query($con, "insert into project_details (project_name, description, skills, file,user_id) values ('$project', '$discription', '$skill','$file_name','$user_id')");
          
         header('location:profile.php');
       }
 ?>
 
 <html>
-    
-<head>
-		<title>project management</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        
-        <style>
-                td
-                {
-                    padding:10px;
-                    text-align: justify;
-                    color: black;
-                }
-          
-        </style>
-    </head>
-
-        <body >
-                          
-                             <div class="container">
-                                 <div class=" jumbotron">
-
-                                 <form method="POST" enctype="multipart/form-data"  >
-
-                                    <table style="margin-left:150px; color:white;">
-                                        <tr >
-                                            <td  >Project Name:</td>
-                                              <td><input id="project_name" type="text" placeholder="My Project" name="project_name" required onkeyup="project_validation('project_name', 'project_error', 'project_val')">
+<?php
+      include("base.html");
+?> <body >
+             <?php   include("header.php"); ?>
+                           
+                            
+                                <div class="flex-container">
+									<div class="panel">
+										<div class="panel-heading"> <h1 style="font-size:3rem">FILL THE FOLLOWING DETAILS..</h1></div>
+										
+										<div class="panel-body">
+                                 <form class="form-group" method="POST" enctype="multipart/form-data" style ="padding :1em; "  >
+                                   
+									 <label for="project_name">Project Name:</label>
+                                              <td><input id="project_name" class="form-control" type="text" placeholder="My Project" name="project_name" required onkeyup="projectname_validation('project_name', 'project_error', 'project_val')"> </td>
                                                    <div style="color:red;font-size:12px;"id="project_error"> </div>
                                                      <div style="color:red;font-size:12px;"id="project_val"> </div>
-                                              </td>
-                                        </tr>
-                                         <tr>
-                                             <td>Skill Required:</td>
-                                             <td>
-                                                 <select name="skills[]" required multiple>
+                                             
+                                       <br>
+                                         
+                                             <label for="opt">Skill Required:</label>
+                                             
+                                                 <select id="opt" name="skills[]" class="selectpicker form-control" required multiple>
                                                           <option value="C++">C++</option>
                                                           <option value="Java">Java</option>
                                                           <option value="PHP">PHP</option>
@@ -77,74 +69,33 @@
                                                           <option value="Ruby">Ruby</option>
                                                          
                                                  </select>
-                                             </td>
-                                        </tr>
+									         
+                                          <br><br>
 
-
-                                        <tr>
-                                           <td>Discription:</td>
-                                            <td>
-   
-                                            <textarea maxlength="150000" style="width:500px; height:209px;"  id="text" name="discription"required onkeyup="project_validation('text', 'text_error', 'text_val')"></textarea>
+                                       
+												 <label for="txt">Description:</label>
+                                  
+                                            <textarea class="form-control" maxlength="150000"   id="txt" name="discription"required onkeyup="description_validation('txt', 'text_error' , 'text_val')"></textarea>
                                               <div style="color:red;font-size:12px;"id="text_error"> </div>
-                                                     <div style="color:red;font-size:12px;"id="text_val"> </div></td>
+									            <div style="color:red;font-size:12px;"id="text_val"> </div>
+                                                    <br/>
                                         
-                                        </tr>
-                                          <tr>
-                                             <td>Drop A Folder Here:</td>
-                                             <td><input type="file" id="file" placeholder="my file" value="put here" name="txtfile" required>
-                                             </td>
-                                        </tr>
+											<label for="file">Drop Folder Here:</label>
+                                             <input class="form-control" type="file" id="file" placeholder="my file" value="put here" accept="application/x-zip-compressed" 
+											 name="txtfile" required>
+                                             <br/><br/>
 
-
-                                            </table><br/><br/>
-                                        <input  class="btn btn-success" id="submit" style="margin-left:100px;" type="submit" value="submit " name="submit"><br/><br/>
-
+                                          <div style="text-align:center;">  
+                                        <input   class="btn btn-success" id="submit"  type="submit" value="submit " name="submit"><br/><br/>
+									 </div>
                                      </form >
-                                 </div>
-            </div>
-            <script>
-                  function space_check(id, error_id)
-                 {
-                      var val =document.getElementById(id).value ;
-                    
-                      if (val.trim() == "")
-                          {  
-                              document.getElementById(error_id).innerHTML="space is not allowed!";
-                              document.getElementById(id).value = val.trim();
-                        
-                              disable_on();
-                          }
-                     else
-                        { document.getElementById(error_id).innerHTML="";
-                          disable_off();
-                        }
-                 }
-               function project_validation(id, error_id,error_val)
-                {   
-                    var val =document.getElementById(id).value;
-                    space_check(id, error_id);
-                    var reg = /^[a-zA-Z0-9\s]+$/;
-                    if(!reg.test(val))
-                        {
-                            document.getElementById(error_val).innerHTML="only alphanumeric characters are allowed! ";
-                            disable_on();
-                        }
-                    else
-                        {
-                            document.getElementById(error_val).innerHTML="";
-                            disable_off();
-                        }
-                    
-                }
-                function disable_on()
-                     {
-                          document.getElementById('submit').setAttribute("disabled", true);
-                     }
-            function disable_off()
-                     {
-                          document.getElementById('submit').removeAttribute("disabled");
-                     }
-            </script>         
+                                     
+										</div>
+            </div></div>
+	
+	
+            
+               
+                
         </body>
     </html>

@@ -1,8 +1,9 @@
-
-    <?php include("base.php"); 
-          include("header.php");
-
-             
+<?php
+           session_start(); 
+          include("base.php"); 
+        
+        $_SESSION['message']="";
+             $error_user = " ";  
             if(isset($_POST["submit"]))
               {
 			
@@ -18,205 +19,131 @@
 
 
                 $email_id = $_POST["email_id"];
+				
+				$college = $_POST["college"];
+				
+				$education = $_POST["education"];
+				
+				 $authen = mysqli_query($con,"select * from login_details where user_name='$username' or user_mail ='$email_id' ") ; 
+				$row = mysqli_num_rows($authen);
+				   if($row == 0)
+				   {   
+					 
+						$ins = mysqli_query($con,"insert into `login_details`(user_name, pwd, first_name, last_name, college, education, user_mail ) values ( '$username', '$password', '$firstname', '$lastname', '$college', '$education', '$email_id' ) " );
 
-     
 
+						if($ins)
+						   {    $_SESSION['message'] = "Congratulation! you are registered. Please login now .";
+							 header('Location:auth.php');
 
-                $ins = mysqli_query( $con,"insert into LOGIN_DETAILS ( user_name, pwd, first_name, last_name, user_mail ) values ( '$username', '$password', '$firstname', '$lastname', '$email_id' ) " );
+						   }
+						else
+						{    echo("<h2 align-self = 'center'>error</h2>");
 
+							$_SESSION['message']="";
+						   printf("Error: %s\n", mysqli_error($con));
 
-                if($ins)
-                   {    $_SESSION['message'] = "Congratulation! you are registered. Please login now .";
-                     header('Location:auth.php');
-                     
-                   }
-                else
-                {    echo("error");
-                     
-                     unset($_SESSION['message']);
-
-            }
+					}}
+				else
+				    {
+					$error_user = "Sorry, either this username or email is already registered";
+				}
 
 
             }
 
         ?>
     <html>
-
+<head>
+<?php include("base.html") ?>
+</head>
 
     <body>
+         <?php include("header.php"); ?>
 
-            <div class="container">
-
-
-                    <div class="panel panel-danger " style="float:left;" >
+            <div class="flex-container">
+                 
+                 
+                    <div  class="panel "  >
 
                         <div class="panel-heading">
-                            <h3>REGISTER YOURSELF!</h3>
+                            <h3  style = "font-size:3rem;">REGISTER YOURSELF!</h3>
                         </div>
-                        <div class="panel-body"> 
-                               <form method="POST"  action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"> 
-                                    <table  >
-                                        <tr >
-
-                                            <td  >USERNAME:</td>
-                                            <td><input id="username" type="text" placeholder="username" name="username" onkeyup= "user_validation('username' , 'username_error', 'user_val')"  required> 
+                      
+                        <div class = "panel-body">
+                               <form method="POST" style = "padding : 0.5em;"> 
+								   <h6 style="text-align:center; color:red;"><?php echo($error_user);?></h6>
+                                        <div class= "form-group">
+                                         <lable for= "username"> USERNAME: </lable>
+                                            <input id="username" class="form-control" type="text" placeholder="username" name="username" onkeyup= "user_validation('username' , 'username_error', 'username_val')"  required> </div> 
                                                  <div style="color:red;font-size:12px;"id="username_error"> </div>
-                                                 <div style="color:red;font-size:12px;"id="user_val"> </div>
-                                            </td>
-                                        </tr>
-                                         <tr>
-                                             <td>PASSWORD: </td>
-                                             <td><input type="password" id="pass" placeholder="mypassword" name="password" required onkeyup= "pass_validation('pass', 'pass_error', 'pass_len','pass_val')"> 
+                                                 <div style="color:red;font-size:12px;"id="username_val"> </div>
+                                                                             
+                                            <lable for="pass" class="control-lable"> PASSWORD:</lable>
+                                             <input type="password" class="form-control" id="pass" placeholder="mypassword" name="password" required onkeyup= "pass_validation('pass', 'pass_error','pass_val')"> 
                                                  <div style="color:red;font-size:13px;" id="pass_error"></div>
-                                                  <div style="color:red;font-size:13px;"  id="pass_len"></div>
+
                                                  <div style="color:red;font-size:13px;" id="pass_val"></div>
-                                             </td>
-                                        </tr>
-
-
-                                        <tr>
-                                           <td>FIRST NAME:</td>
-                                            <td><input type="text" id="first_name" placeholder="first name" name="firstname" onkeyup= "name_validation( 'first_name', 'firstname_err', 'firstname_val' )"  required>
-                                            <div style="color:red;font-size:13px;"id="firstname_err"> </div>
-                                                <div style="color:red;font-size:13px;"id="firstname_val"> </div></td>
-                                        </tr>
-
-                                        <tr>
-                                            <td >LAST NAME: </td>
-                                           <td><input  id="last_name" type="text" placeholder="last name" name="lastname"  onkeyup= "name_validation( 'last_name', 'lastname_error', 'lastname_val' )" required> 
+                                     
+                                       
+                                          <lable for="first_name" class= "control-lable"> FIRST NAME:</lable>
+                                          <input type="text" class="form-control" id="first_name" placeholder="first name" name="firstname" onkeyup= "name_validation( 'first_name', 'firstname_error', 'firstname_val' )"  required>
+                                            <div style="color:red;font-size:13px;"id="firstname_error"> </div>
+                                                <div style="color:red;font-size:13px;"id="firstname_val"> </div>
+                                           
+                                             
+                                              <lable for = "last_name" class= "control-lable">LAST NAME:</lable>
+                                              <input  id="last_name" class="form-control" type="text" placeholder="last name" name="lastname"  onkeyup= "name_validation( 'last_name', 'lastname_error', 'lastname_val' )" required> 
                                                <div style="color:red; font-size:13px;" id="lastname_error"></div>
                                                 <div style="color:red;font-size:13px;"id="lastname_val"> </div>
-                                               </td>
-                                        </tr>
-
-                                        <tr style="padding:5px;">
-                                            <td>EMAIL ID:</td>                    
-                                            <td><input type="text" id="email" placeholder="user@mail.com" name="email_id" required  onkeyup= "email_validation('email', 'email_err', 'email_val')"> 
-                                                <div style="color:red; font-size:13px;"id="email_err"> </div>
-                                                <div style="color:red; font-size:13px;"id="email_val"></div> </td>
-                                        </tr>
-                                            </table><br/><br/>
-                                        <input  id="submit" class="btn btn-danger" style="margin-left:100px;" type="submit" value="SIGN UP" name="submit"><br/><br/>
+								   
+												<lable for = "institute" class= "control-lable">COLLEGE:</lable>
+                                              <input  id="institute" class="form-control" type="text" placeholder=" your institute name here" name="college"  onkeyup= "college_validation('institute' , 'college_error', 'college_val')" required> 
+                                               <div style="color:red; font-size:13px;" id="college_error"></div>
+								                 <div style="color:red; font-size:13px;" id="college_val"></div>
+												 
+								              <lable for= "stream">EDUCATION :</lable>
+												  <select class="form-control" name="education" id="stream">
+												      <option value="B.A">B.A</option>
+													  <option value="BSc">BSc</option>
+													  <option value="Computer Enggineering(Btech)">Computer Enggineering(Btech)</option>
+													  <option value="Electronics(Btech)">Electronics(Btech)</option>
+													  <option value="Diploma">Diploma</option>
+												  </select>
+                                         
+                                            
+                                             <lable for = "email" >EMAIL ID:</lable>
+								   <input class="form-control" type="text" id="email" placeholder="user@mail.com" name="email_id" required  onkeyup= "email_validation('email', 'email_error', 'email_val')"> 
+                                                <div style="color:red; font-size:13px;"id="email_error"> </div>
+                                                <div style="color:red; font-size:13px;"id="email_val"></div> 
+                                                 <br/>
+                                            <div class= "form-group" style = "text-align:center;">
+												
+                                        <input  id="submit" class="btn btn-danger" type="submit" value="SIGN UP" name="submit"></div>
 
                                 </form >
 
                              <div class="pannel-footer"> <em>Already have a account?<a href="auth.php"> login </a> here.</em></div>
 
-                        </div>
-                    </div>
-                    <div class="panel panel-danger about_PM" style="float:right;" >
-                        <div class="panel-heading">
-                            <h3>ABOUT PROJECT MANAGEMENT</h3>
-                        </div> 
-                        <div class="panel-body">Project Management allows you to store your project
-                                    safely and secured.	
-                        </div>
-                    </div>
-                    </div>
-        <script>
-                function space_check(id, error_id)
-                 {
-                      var val =document.getElementById(id).value ;
-                    
-                      if (val.trim() == "")
-                          {  
-                              document.getElementById(error_id).innerHTML="space is not allowed!";
-                              document.getElementById(id).value = val.trim();
-                        
-                              disable_on();
-                          }
-                     else
-                        { document.getElementById(error_id).innerHTML="";
-                          disable_off();
-                        }
-                 }
-                function length_check(val, error_len)
-                    {
-                     
-                        var len = val.length;
-                        if (len < 8 )
-                            {
-                                document.getElementById(error_len).innerHTML= "length of password must be atleast eight";
-                                disable_on();
-                            }
-                        else 
-                           { document.getElementById(error_len).innerHTML= " ";
-                            disable_off();
-                           }
-                    }
-            function user_validation(id, error_id, error_val)
-              {   var val =document.getElementById(id).value ;
+                       
+                    </div></div>
                    
-                  space_check(id,  error_id);
-                  var reg = /^[A-Za-z]+[0-9]{1,3}$/;
-                  if (!reg.test(val))
-                      {
-                          document.getElementById(error_val).innerHTML="username must end with numeric character!";
-                          disable_on();
-                      }
-                  else
-                      {
-                           document.getElementById(error_val).innerHTML="";
-                          disable_off();
-                      }
-              }
-            function pass_validation(id, error_id, error_len, error_val)
-                {   var val =document.getElementById(id).value ;
-                    space_check(id,  error_id);
-                    length_check(val, error_len);
-                    var reg=/^(?=.*\d)[a-zA-Z\d_@./#&+-]{8,13}$/; 
-                    if(!reg.test(val))
-                        {
-                            document.getElementById(error_val).innerHTML = "password must consist of alphanumeric character! ";
-                            disable_on();
-                        }
-                   else
-                       {
-                            document.getElementById(error_val).innerHTML = "";
-                            disable_off();
-                       }
-                }
-             function disable_on()
-                     {
-                          document.getElementById('submit').setAttribute("disabled", true);
-                     }
-            function disable_off()
-                     {
-                          document.getElementById('submit').removeAttribute("disabled");
-                     }
-            function name_validation(id, error_id, error_val)
-                    {
-                        space_check(id, error_id);
-                        var val = document.getElementById(id).value;
-                        var reg = /^[A-Za-z]+$/;
-                        if (!reg.test(val))
-                            {
-                                document.getElementById(error_val).innerHTML="This field can only have alphabets!";
-                                disable_on();
-                            }
-                        else
-                            {
-                                document.getElementById(error_val).innerHTML="";
-                                disable_off();
-                            }
-                    }
-            function email_validation(id, error_id, error_val)
-                  {   var val = document.getElementById(id).value;
-                      space_check(id, error_id);
-                      var reg =/^[a-zA-Z0-9]+\.*[a-zA-Z0-9]*@[a-zA-Z0-9]+\.*[a-zA-Z0-9]+$/;
-                      if(!reg.test(val))
-                          {
-                              document.getElementById(error_val).innerHTML="Email must consist of @ and .";
-                              disable_on();
-                          }
-                    else
-                        {
-                            document.getElementById(error_val).innerHTML="";
-                            disable_off();
-                        }
-                  }
-            
-       </script>
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <h3  style = "font-size:3rem;">ABOUT PROJECT MANAGEMENT</h3>
+                        </div> 
+                        <div class="panel-body">
+								
+	     <div class="content">
+			 <p> The PROJECT HUB  provide the space to  keep <br>
+				your project secured and safe . We also  provide <br>
+				you chance to post your project on our home  page . <br>
+				<br>
+				      
+				 Some of posted projects are given on home page , you may <br>
+				 download them by clicking download button.......
+			 </p></div>	</div></div></div>
+                 
+        
             </body>
         </html>
